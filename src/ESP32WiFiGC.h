@@ -49,7 +49,8 @@ void wifigc_connectOpenLcb() {
   // Use the Hub service IP address to connect.
   for( int i=0; i<n; i++) {
     // Use WiFiClient class to create TCP connections
-    if (client.connect(MDNS.IP(i), 12021)) break;
+    // if (client.connect(MDNS.IP(i), 12021)) break;
+    if (client.connect(MDNS.IP(i), 12021, 1000)) break; // Need to add the timeout parameter to work with JMRI 5.11.6 on laptop. 5.11.5 on RPi3B didn't need it !!
     Serial.printf("\n%6ld Hub connection Failed", millis());
     if(i==n) {
       i=0;
