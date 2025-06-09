@@ -1,14 +1,15 @@
-//
-//  ESP32WifiGC.h
-//
-// Created by John Callinghamn on 2025-05-06 from original code from WiFiGC.h
-//  which was created by Dave Harris on 2024-09-17.
-// Removed WiFiManager code and used expliciy set AP ssid and password.
-//
 #ifndef ESP32WIFIGC_H
 #define ESP32WIFIGC_H
-
-//#pragma message("!!! compiling ESP32WifiGC.h ")
+/**
+ * ESP32WifiGC.h
+ * 
+ * Created by John Callinghamn on 2025-05-06 from original code from WiFiGC.h
+ *  which was created by Dave Harris on 2024-09-17.
+ * Changes;-
+ * - Removed WiFiManager code and used expliciy set AP ssid and password.
+ * - Removed wifigc_init() from OlcbCanClass::init() to force wifigc_init() to only
+ *    take place in main loop() and not in setup().
+ */
 
 #define NOCAN // disallow processor's CAN, this seems to fail on ESP32 compiler
 
@@ -21,7 +22,7 @@ bool hubConnected = false;
 
 class OlcbCanClass : public OlcbCan {
  public:
-    OlcbCanClass(){}
+  OlcbCanClass(){}
   void init();
   uint8_t  avail();
   uint8_t  read();
