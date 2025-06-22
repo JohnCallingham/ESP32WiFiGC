@@ -1,4 +1,8 @@
 {
 "name": "ESP32WiFiGC",
-"version": "0.1.1"
+"version": "0.1.1",
+"dependencies":
+  {
+    "WiFi_MULTI": "https://github.com/JohnCallingham/WiFi_MULTI.git"
+  }
 }
