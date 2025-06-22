@@ -47,6 +47,13 @@ void wifigc_connectOpenLcb() {
     return;
   }
 
+  /**
+   * TO DO: If there is a previous hub connection then close it.
+   * It seems that when rebooting the ESP32 we have to wait for
+   *  any previous hub connection to time out before we can make another connection.
+   * This appears to be an issue when in Dorset, but not in London!!
+   */
+
   // Use the Hub service IP address to connect.
   for( int i=0; i<n; i++) {
     // Use WiFiClient class to create TCP connections
