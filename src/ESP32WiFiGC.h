@@ -17,8 +17,12 @@
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
+#include "WiFi_Multi.h"
+
 WiFiClient client;
 bool hubConnected = false;
+
+WiFi_Multi wifi_Multi;
 
 class OlcbCanClass : public OlcbCan {
  public:
@@ -40,7 +44,8 @@ void wifigc_connectOpenLcb() {
   }
 
   // Find the Hub service.
-  int n = MDNS.queryService(openLCB_can, "tcp");
+  // int n = MDNS.queryService(openLCB_can, "tcp");
+  int n = MDNS.queryService("openLCB-can", "tcp");
   delay(1000);
   if (n == 0) {
     Serial.printf("\n%6ld Hub not available", millis());
@@ -70,6 +75,19 @@ void wifigc_connectOpenLcb() {
 }
 
 void wifigc_init() {
+  // Get the SSID credentials.
+  WiFi_Multi_Error error = wifi_Multi.findMatchingSSID(credentials);
+  if (error) {
+    // Display error and exit.
+    Serial.printf("\n%6ld Error finding matching SSID: %s", millis(), error.c_str());
+    return;
+  }
+
+  // Match found. Use wifi_Multi.SSID and wifi_Multi.password to connect to the matching SSID.
+  const char* name = wifi_Multi.getMatchingName();
+  const char* ssid = wifi_Multi.getMatchingSSID();
+  const char* password = wifi_Multi.getMatchingPassword();
+
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   WiFi.setMinSecurity(WIFI_AUTH_WPA_PSK); // Default is WPA2
 
