@@ -44,20 +44,13 @@ void wifigc_connectOpenLcb() {
   }
 
   // Find the Hub service.
-  // int n = MDNS.queryService(openLCB_can, "tcp");
-  int n = MDNS.queryService("openLCB-can", "tcp");
+  const char *hubName = "openlcb-can";
+  int n = MDNS.queryService(hubName, "tcp");
   delay(1000);
   if (n == 0) {
-    Serial.printf("\n%6ld Hub not available", millis());
+    Serial.printf("\n%6ld Hub %s not available", millis(), hubName);
     return;
   }
-
-  /**
-   * TO DO: If there is a previous hub connection then close it.
-   * It seems that when rebooting the ESP32 we have to wait for
-   *  any previous hub connection to time out before we can make another connection.
-   * This appears to be an issue when in Dorset, but not in London!!
-   */
 
   // Use the Hub service IP address to connect.
   for( int i=0; i<n; i++) {
