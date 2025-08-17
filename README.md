@@ -1,16 +1,9 @@
 # ESP32WiFiGC
 
-This library has been designed to be part of the ESP32_2Servo_2Frog_2TOTI_WiFi program. It is part of a suite of libraries which can be used as part of an OpenLCB/LCC node.
+The file ESP32WiFiGC.h is a replacement for the file WiFiGC.h in the OpenLCB_Single_Thread library.
+
+It removes the WiFiManager code and instead uses the WiFi_MULTI library (https://github.com/JohnCallingham/WiFi_MULTI.git) to connect to one of a number of configured WiFi Access Points.
+
+All of the WiFi connection will take place to the main program loop so that disconnection and reconnection can be handled there.
 
 This library has been developed using PlatformIO.
-
-It has been designed to work with the OpenLCB_Single_Thread library (https://github.com/openlcb/OpenLCB_Single_Thread/tree/master)
-and contains a single file ESP32WiFiGC.h which is a replacement for the original WiFiGC.h.
-
-It can be installed in PlatformIO by updating platform.ini by editing lib_deps as below;
-
-`lib_deps = openlcb/OpenLCB_Single_Thread@^0.1.12
-          https://github.com/JohnCallingham/ESP32WiFiGC.git`
-
-It can be installed into the Arduino IDE by downloading the .zip file and adding to the Arduino library using Sketch -> Include Library -> Add .Zip Library
-
