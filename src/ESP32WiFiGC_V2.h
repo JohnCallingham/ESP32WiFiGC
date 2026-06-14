@@ -1,9 +1,16 @@
-#ifndef ESP32WIFIGC_H
-#define ESP32WIFIGC_H
+#ifndef ESP32WIFIGC_V2_H
+#define ESP32WIFIGC_V2_H
 /**
- * ESP32WifiGC.h
+ * ESP32WifiGC_V2.h
  * 
- * Created by John Callinghamn on 2025-05-06 from original code from WiFiGC.h
+ * Created by John Callingham on 2026-06-14 from ESP32WIFIGC.h
+ * Modified wifigc_init() for the following changes;-
+ *  - Removed the functionality which allowed multiple SSIDs to be specified
+ *     and the code would connect to whichever was available.
+ *  - Added code to connect to the SSID which was specified in preferences, which
+ *     was configured by the user at runtime.
+ * 
+ * Created by John Callingham on 2025-05-06 from original code from WiFiGC.h
  *  which was created by Dave Harris on 2024-09-17.
  * Changes;-
  * - Removed WiFiManager code and used expliciy set AP ssid and password.
@@ -17,14 +24,15 @@
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
-#include "WiFi_Multi.h"
+//#include "WiFi_Multi.h"
 //#include "credentials.h" // Does not need to be included !!!
 //extern const char* credentials; // Does not need to be declared !!!
+#include "configurationMenu.h"
 
 WiFiClient client;
 bool hubConnected = false;
 
-WiFi_Multi wifi_Multi;
+//WiFi_Multi wifi_Multi;
 
 class OlcbCanClass : public OlcbCan {
  public:
@@ -70,18 +78,10 @@ void wifigc_connectOpenLcb() {
 }
 
 void wifigc_init() {
-  // Get the SSID credentials.
-  WiFi_Multi_Error error = wifi_Multi.findMatchingSSID(credentials);
-  if (error) {
-    // Display error and exit.
-    Serial.printf("\n%6ld Error finding matching SSID: %s", millis(), error.c_str());
-    return;
-  }
-
-  // Match found. Use wifi_Multi.SSID and wifi_Multi.password to connect to the matching SSID.
-  const char* name = wifi_Multi.getMatchingName();
-  const char* ssid = wifi_Multi.getMatchingSSID();
-  const char* password = wifi_Multi.getMatchingPassword();
+  // Get the SSID credentials from preferences via the configuration menu.
+  ConfigurationMenu configurationMenu;
+  String ssid = configurationMenu.getSSID();
+  String password = configurationMenu.getPassword();
 
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   WiFi.setMinSecurity(WIFI_AUTH_WPA_PSK); // Default is WPA2
