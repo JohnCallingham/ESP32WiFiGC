@@ -95,6 +95,7 @@ void wifigc_init() {
     }
     Serial.printf("\n%6ld Connected to %s", millis(), ssid);
     Serial.printf("\n%6ld IP address: %s", millis(), WiFi.localIP().toString());
+    Serial.printf("\n%6ld MAC address: %s", millis(), WiFi.macAddress().c_str());
   }
 
   // wifigc_connectOpenLcb(); not required here as all initialisation happens in loop(), not setup().
