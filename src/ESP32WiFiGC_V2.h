@@ -24,10 +24,7 @@
 
 #include <WiFi.h>
 #include <ESPmDNS.h>
-//#include "WiFi_Multi.h"
-//#include "credentials.h" // Does not need to be included !!!
-//extern const char* credentials; // Does not need to be declared !!!
-#include "configurationMenu.h"
+#include "configurationOTA.h"
 
 WiFiClient client;
 bool hubConnected = false;
@@ -77,12 +74,7 @@ void wifigc_connectOpenLcb() {
   Serial.printf("\n%6ld Connected to OpenLCB/LCC Hub", millis());
 }
 
-void wifigc_init() {
-  // Get the SSID credentials from preferences via the configuration menu.
-  ConfigurationMenu configurationMenu;
-  String ssid = configurationMenu.getSSID();
-  String password = configurationMenu.getPassword();
-
+void wifigc_init(const char* ssid, const char* password) {
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   WiFi.setMinSecurity(WIFI_AUTH_WPA_PSK); // Default is WPA2
 
@@ -102,15 +94,15 @@ void wifigc_init() {
 }
 
 // Returns true if hub connected, else false.
-bool wifigc_process() {
-  if (WiFi.status() != WL_CONNECTED) wifigc_init();
+bool wifigc_process(const char* ssid, const char* password) {
+  if (WiFi.status() != WL_CONNECTED) wifigc_init(ssid, password);
   if (!client.connected()) wifigc_connectOpenLcb();
   return client.connected();
 }
 
 // Returns true if the hub was not connected and is now connected, else false.
-bool hubConnectionMade() {
-  if (!hubConnected && wifigc_process()) {
+bool hubConnectionMade(const char* ssid, const char* password) {
+  if (!hubConnected && wifigc_process(ssid, password)) {
     hubConnected = true;
     return true;
   }
@@ -119,8 +111,8 @@ bool hubConnectionMade() {
 }
 
 // Returns true if the hub was connected and is now disconnected, else false.
-bool hubConnectionLost() {
-  if (hubConnected && !wifigc_process()) {
+bool hubConnectionLost(const char* ssid, const char* password) {
+  if (hubConnected && !wifigc_process(ssid, password)) {
     hubConnected = false;
     return true;
   }
