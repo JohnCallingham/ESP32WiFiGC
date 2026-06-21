@@ -29,8 +29,6 @@
 WiFiClient client;
 bool hubConnected = false;
 
-//WiFi_Multi wifi_Multi;
-
 class OlcbCanClass : public OlcbCan {
  public:
   OlcbCanClass(){}
@@ -80,11 +78,16 @@ void wifigc_init(const char* ssid, const char* password) {
 
   if( WiFi.status() != WL_CONNECTED ) {
     Serial.printf("\n%6ld Connecting to %s", millis(), ssid);
-    while (WiFi.status() != WL_CONNECTED) {
-      WiFi.begin(ssid, password);
-      delay(2000); // Originally 1000mS, but a second ESP32 didn't work until changed to 2000mS.
-      Serial.printf("\n%6ld Connecting to %s", millis(), ssid);
+    WiFi.begin(ssid, password);
+    while (! WiFi.isConnected()) {
+      Serial.print(".");
+      delay(100);
     }
+    // while (WiFi.status() != WL_CONNECTED) {
+    //   WiFi.begin(ssid, password);
+    //   delay(2000); // Originally 1000mS, but a second ESP32 didn't work until changed to 2000mS.
+    //   Serial.printf("\n%6ld Connecting to %s", millis(), ssid);
+    // }
     Serial.printf("\n%6ld Connected to %s", millis(), ssid);
     Serial.printf("\n%6ld IP address: %s", millis(), WiFi.localIP().toString());
     Serial.printf("\n%6ld MAC address: %s", millis(), WiFi.macAddress().c_str());
