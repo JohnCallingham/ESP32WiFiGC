@@ -3,7 +3,6 @@
 "version": "0.1.1",
 "dependencies":
   {
-    "WiFi_MULTI": "https://github.com/JohnCallingham/WiFi_MULTI.git",
     "LCC_CONFIGURATION": "https://github.com/JohnCallingham/LCC_CONFIGURATION.git"
   }
 }
