@@ -74,11 +74,13 @@ void wifigc_connectOpenLcb() {
 
 void wifigc_init(const char* ssid, const char* password) {
   // Check for no SSID. Probably due to no SSID stored in Preferences yet.
+  // Sometimes the first time getting the SSID from Preferences returns a zero length string.
   if (strlen(ssid) == 0) {
-    while(true) {
+    // while(true) {
       Serial.printf("\n%6ld SSID is zero length", millis());
-      delay (5000);
-    }
+      delay (1000);
+      return;
+    // }
   }
 
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
