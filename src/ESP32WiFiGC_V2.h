@@ -73,27 +73,29 @@ void wifigc_connectOpenLcb() {
 }
 
 void wifigc_init(const char* ssid, const char* password) {
+  // Check for no SSID. Probably due to no SSID stored in Preferences yet.
+  if (strlen(ssid) == 0) {
+    while(true) {
+      Serial.printf("\n%6ld SSID is zero length", millis());
+      delay (5000);
+    }
+  }
+
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   WiFi.setMinSecurity(WIFI_AUTH_WPA_PSK); // Default is WPA2
 
-  if( WiFi.status() != WL_CONNECTED ) {
+  if (WiFi.status() != WL_CONNECTED) {
     Serial.printf("\n%6ld Connecting to %s", millis(), ssid);
     WiFi.begin(ssid, password);
     while (! WiFi.isConnected()) {
       Serial.print(".");
       delay(100);
     }
-    // while (WiFi.status() != WL_CONNECTED) {
-    //   WiFi.begin(ssid, password);
-    //   delay(2000); // Originally 1000mS, but a second ESP32 didn't work until changed to 2000mS.
-    //   Serial.printf("\n%6ld Connecting to %s", millis(), ssid);
-    // }
+
     Serial.printf("\n%6ld Connected to %s", millis(), ssid);
     Serial.printf("\n%6ld IP address: %s", millis(), WiFi.localIP().toString());
     Serial.printf("\n%6ld MAC address: %s", millis(), WiFi.macAddress().c_str());
   }
-
-  // wifigc_connectOpenLcb(); not required here as all initialisation happens in loop(), not setup().
 }
 
 // Returns true if hub connected, else false.
